@@ -16,7 +16,7 @@ function getSequence(){
  	 display.attr('src', 'css/'+images[num]);
 	 display.attr('value', num);
 	 updateSequence(num);
-	 window.setTimeout(hideImage, 1500);	 
+	 window.setTimeout(hideImage, 900);	 
          window.setInterval(function(){
 		if (count < data.array.length){
 			var display = $("#imageBox");
@@ -26,9 +26,9 @@ function getSequence(){
 			display.attr('src', 'css/'+images[num]);
 			display.attr('value', num);
 			updateSequence(num);
-			window.setTimeout(hideImage, 1500);
+			window.setTimeout(hideImage, 900);
 		}
-	}, 2000);
+	}, 1000);
       },
       error: function(request, status, err) {
          console.log(request);
@@ -44,6 +44,7 @@ function hideImage(){
 }
 
 function updateSequence(num){
+	 lastPressed = null;
 	 var dataObject = {
 		"num": num
 	 };
@@ -65,55 +66,63 @@ function updateSequence(num){
 }
 
 var balloonSize = 0;
+var lastPressed =null;
 
 function sendButtonPress(letter){
    var dataObject = {
       "button": letter
    }
-   $.ajax({
-      type: 'POST',
-      url: 'room/play/controls',
-      data: dataObject,
-      timeout: '10000',
-      success: function(d)
-      {
-         var jsonObj = JSON.parse(d);
-	 console.log(jsonObj);
-	 if (jsonObj.stat == "true" && balloonSize < 9){
-		balloonSize++;
-		updateBalloon();
-	 } 
-	 else if (jsonObj.stat == "false" && balloonSize > 0){
-		balloonSize--;
-		updateBalloon();
-	 }
-      },
-      error: function(request, status, err) {
-         console.log(request);
-	 console.log(status);
-         console.log(err);			
-      } 
-   });
+   if (letter != lastPressed){
+      $.ajax({
+         type: 'POST',
+         url: 'room/play/controls',
+         data: dataObject,
+         timeout: '10000',
+         success: function(d)
+         {
+            var jsonObj = JSON.parse(d);
+	    console.log(jsonObj);
+	    if (jsonObj.stat == "true" && balloonSize < 9){
+	   	   balloonSize++;
+		   updateBalloon();
+	    } 
+	    else if (jsonObj.stat == "false" && balloonSize > 0){
+		   balloonSize--;
+		   updateBalloon();
+	    }
+      	    lastPressed = letter;
+         },
+         error: function(request, status, err) {
+            console.log(request);
+	    console.log(status);
+            console.log(err);			
+         } 
+      });
+   }
 }
 
 function updateBalloon(){
 	var bal = $('#imageBalloon');
 	bal.attr('src', 'css/balloon'+balloonSize+'.png');
 	if (balloonSize == 9){
-		.ajax({
-			type: 'POST',
-			url: '',
-			timeout: '10000',
-			success: function(d){
-				alert("You won");
-			}
-			error: function(request, status, err){
-				console.log(request);
-				console.log(status);
-				console.log(err);
-			}
-		});
+		win();
 	}
+}
+
+function win(){
+	.ajax({
+		type: 'POST',
+		url: '',
+		timeout: '10000',
+		success: function(d){
+			alert("You won");
+		}
+		error: function(request, status, err){
+			console.log(request);
+			console.log(status);
+			console.log(err);
+		}
+	});
 }
 
 

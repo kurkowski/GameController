@@ -178,7 +178,7 @@ app = webapp2.WSGIApplication([
 	webapp2.Route(r'/room/connect', handler=ConnectHandler, name='connect'),
 	webapp2.Route(r'/room/connect/Monitor', handler=MonitorHandler, name='monitor'),
 	webapp2.Route(r'/room/play?game', handler=PlayHandler, name='play'),
-	webapp2.Route(r'/game/test/controls', handler=ControlsTestHandler, name='controls_test'),
+	webapp2.Route(r'/room/play/controls', handler=ControlsTestHandler, name='controls_test'),
 	webapp2.Route(r'/game/test/sequence', handler=GenerateRandomButtons, name='sequence'),
 	webapp2.Route(r'/game/test/update', handler=UpdateSequence, name='update')
 	], debug=True)
