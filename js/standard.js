@@ -72,7 +72,7 @@ function sendButtonPress(letter){
    }
    $.ajax({
       type: 'POST',
-      url: 'game/test/controls',
+      url: 'room/play/controls',
       data: dataObject,
       timeout: '10000',
       success: function(d)
