@@ -99,6 +99,21 @@ function sendButtonPress(letter){
 function updateBalloon(){
 	var bal = $('#imageBalloon');
 	bal.attr('src', 'css/balloon'+balloonSize+'.png');
+	if (balloonSize == 9){
+		.ajax({
+			type: 'POST',
+			url: '',
+			timeout: '10000',
+			success: function(d){
+				alert("You won");
+			}
+			error: function(request, status, err){
+				console.log(request);
+				console.log(status);
+				console.log(err);
+			}
+		});
+	}
 }
 
 

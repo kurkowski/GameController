@@ -20,6 +20,7 @@ function getSequence(){
          window.setInterval(function(){
 		if (count < data.array.length){
 			var display = $("#imageBox");
+			display.css('display', 'block');
 			var num = data.array[count];
 			count++;
 			display.attr('src', 'css/'+images[num]);
