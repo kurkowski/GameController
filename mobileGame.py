@@ -2,13 +2,12 @@ import webapp2
 import jinja2
 import os
 import json
-<<<<<<< HEAD
 from google.appengine.api import users
 from google.appengine.api import memcache
 from models import *
 import random
 import logging
->>>>>>> bc6006713e20b275c0e68e2e274f4095c5de0526
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -32,12 +31,10 @@ def user_key(user_nickname):
 
 class MainPage(webapp2.RequestHandler):
 	def get(self):
-<<<<<<< HEAD
 		user_nickname = getUser(self)	
 		player = Player.query_player(user_key(user_nickname)).fetch(1)[0]
 		template = JINJA_ENVIRONMENT.get_template('templates/index.html')
 		template_values = {'name':user_nickname, 'inRoom':player}
->>>>>>> bc6006713e20b275c0e68e2e274f4095c5de0526
 		#template = JINJA_ENVIRONMENT.get_template('gameScreen.html')
 		#template_values = {}
 		self.response.write(template.render(template_values))
@@ -96,7 +93,6 @@ class ConnectHandler(webapp2.RequestHandler):
 							'players': players,}
 		self.response.write(template.render(template_values))
 
-<<<<<<< HEAD
 class RoomHandler(webapp2.RequestHandler):
 	def get(self):
 		user_nickname = getUser(self)
@@ -120,8 +116,7 @@ class RoomHandler(webapp2.RequestHandler):
 
 class PlayHandler(webapp2.RequestHandler):
 	def get(self):
-
->>>>>>> bc6006713e20b275c0e68e2e274f4095c5de0526
+		pass
 
 #temporary code to test controller
 class ControlsTestHandler(webapp2.RequestHandler):
