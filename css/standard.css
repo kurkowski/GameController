@@ -1,3 +1,9 @@
+#imageDisplayer{
+	position:absolute;
+	top: 0px;
+	left: 40%;
+}
+
 #upArrow{
    position: absolute;
    left: 200px;
