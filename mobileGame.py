@@ -7,7 +7,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class MainPage(webapp2.RequestHandler):
 	def get(self):
-		template = JINJA_ENVIRONMENT.get_template('index.html')
+		template = JINJA_ENVIRONMENT.get_template('templates/index.html')
 		template_values = {}
 		self.response.write(template.render(template_values))
 
@@ -17,7 +17,7 @@ class ConnectHandler(webapp2.RequestHandler):
 		#todo: first need to create room before implementing join
 
 
-		template = JINJA_ENVIRONMENT.get_template('connect.html')
+		template = JINJA_ENVIRONMENT.get_template('templates/connect.html')
 		template_values = {'code':code,}
 		self.response.write(template.render(template_values))
 
@@ -35,7 +35,7 @@ class ControlsTestHandler(webapp2.RequestHandler):
 		if letter is None:
 			letter = 'none'
 
-		template = JINJA_ENVIRONMENT.get_template('controlsTest.html')
+		template = JINJA_ENVIRONMENT.get_template('templates/controlsTest.html')
 		template_values = {'letter':letter,}
 		self.response.write(template.render(template_values))
 
