@@ -32,7 +32,11 @@ def user_key(user_nickname):
 class MainPage(webapp2.RequestHandler):
 	def get(self):
 		user_nickname = getUser(self)	
-		player = Player.query_player(user_key(user_nickname)).fetch(1)[0]
+		player = Player.query_player(user_key(user_nickname)).fetch(1)
+		if player:
+			player = player[0]
+		else:
+			player = None
 		template = JINJA_ENVIRONMENT.get_template('templates/index.html')
 		template_values = {'name':user_nickname, 'inRoom':player}
 		#template = JINJA_ENVIRONMENT.get_template('gameScreen.html')
@@ -63,25 +67,26 @@ class CreateHandler(webapp2.RequestHandler):
 class ConnectHandler(webapp2.RequestHandler):
 	def get(self):
 		user_nickname = getUser(self)
-		player = Player.query_player(user_key(user_nickname))
+		player = Player.query_player(user_key(user_nickname)).fetch(1)[0]
 		creator_nickname = self.request.get('creatorNickname')
 
-		room = Room.query_room(user_key(creator_nickname)).fetch(1)[0]
+		if player.in_room:
+			self.redirect('/room')
+			#redirect to his room
+
+		room = Room.query_room(user_key(creator_nickname)).fetch(1)
 		if room:
-			if player.in_room:
-				pass
-				#redirect to his room
-			else:
-				room = room[0]
-				status = room.status
-				date = room.date
-				room.players.append(user_nickname)
-				players = room.players
-				player.in_room = True
-				player.room_owner = creator_nickname
-				room.put()
-				player.put()
+			room = room[0]
+			status = room.status
+			date = room.date
+			room.players.append(user_nickname)
+			players = room.players
+			player.in_room = True
+			player.room_owner = creator_nickname
+			room.put()
+			player.put()
 		else:
+			#fix: print error message
 			status = -1
 			date = -1
 			players = []
@@ -114,9 +119,19 @@ class RoomHandler(webapp2.RequestHandler):
 		else:
 			self.redirect('/')
 
+class MonitorHandler(webapp2.RequestHandler):
+	def get(self):
+		user_nickname = getUser(self)
+		player = Player.query_player(user_key(user_nickname)).fetch(1)[0]
+		if player.in_room:
+			pass
+
+
+
+
 class PlayHandler(webapp2.RequestHandler):
 	def get(self):
-		pass
+		pass		
 
 #temporary code to test controller
 class ControlsTestHandler(webapp2.RequestHandler):
@@ -161,6 +176,7 @@ app = webapp2.WSGIApplication([
 	webapp2.Route(r'/room', handler=RoomHandler, name='room'),
 	webapp2.Route(r'/room/create', handler=CreateHandler, name='create'),
 	webapp2.Route(r'/room/connect', handler=ConnectHandler, name='connect'),
+	webapp2.Route(r'/room/connect/Monitor', handler=MonitorHandler, name='monitor'),
 	webapp2.Route(r'/room/play?game', handler=PlayHandler, name='play'),
 	webapp2.Route(r'/game/test/controls', handler=ControlsTestHandler, name='controls_test'),
 	webapp2.Route(r'/game/test/sequence', handler=GenerateRandomButtons, name='sequence'),

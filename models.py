@@ -20,6 +20,7 @@ class Room(ndb.Model):
 	status = ndb.IntegerProperty(indexed=False)
 	limit = ndb.IntegerProperty(indexed=False)
 	players = ndb.StringProperty(indexed=False, repeated=True)
+	monitor = ndb.StringProperty(indexed=False)
 	date = ndb.DateTimeProperty(auto_now_add=True)
     
 	@classmethod
