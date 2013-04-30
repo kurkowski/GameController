@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<head>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	
+	 <link rel="stylesheet" type="text/css" href="css/standard.css">
+</head>
+<body onload="getSequence()">
+	<div id="imageDisplayer">
+		<img src="" width="150" height="150" id='imageBox'>
+	</div>
+
+	<div id="balloonbox">
+		<img src="css/balloon0.png" width="150" height="150" id='imageBalloon'>
+	</div>
+
+	<div id='upArrow'>
+         	<input type='image' src='css/uparrow.png' onclick="sendButtonPress('u')">
+	</div>
+
+      	<div id='downArrow'>
+         	<input type='image' src='css/downarrow.png' onclick="sendButtonPress('d')">
+	</div>
+
+      	<div id='leftArrow'>
+         	<input type='image' src='css/leftarrow.png' onclick="sendButtonPress('l')">
+	</div>
+
+      	<div id='rightArrow'>
+         	<input type='image' src='css/rightarrow.png' onclick="sendButtonPress('r')">
+	</div>
+
+      	<div id='AButton'>
+         	<input type='image' src='css/abutton.png' onclick="sendButtonPress('a')">
+	</div>
+
+      	<div id='BButton'>
+         	<input type='image' src='css/bbutton.png' onclick="sendButtonPress('b')">
+	</div>
+	<script src="js/standard.js"></script>
+</body>

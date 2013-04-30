@@ -2,9 +2,15 @@ import webapp2
 import jinja2
 import os
 import json
+<<<<<<< HEAD
 from google.appengine.api import users
 from google.appengine.api import memcache
 from models import *
+=======
+import random
+import logging
+from google.appengine.api import memcache
+>>>>>>> bc6006713e20b275c0e68e2e274f4095c5de0526
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -27,10 +33,15 @@ def user_key(user_nickname):
 
 class MainPage(webapp2.RequestHandler):
 	def get(self):
+<<<<<<< HEAD
 		user_nickname = getUser(self)	
 		player = Player.query_player(user_key(user_nickname)).fetch(1)[0]
 		template = JINJA_ENVIRONMENT.get_template('templates/index.html')
 		template_values = {'name':user_nickname, 'inRoom':player}
+=======
+		template = JINJA_ENVIRONMENT.get_template('gameScreen.html')
+		template_values = {}
+>>>>>>> bc6006713e20b275c0e68e2e274f4095c5de0526
 		self.response.write(template.render(template_values))
 
 class CreateHandler(webapp2.RequestHandler):
@@ -87,6 +98,7 @@ class ConnectHandler(webapp2.RequestHandler):
 							'players': players,}
 		self.response.write(template.render(template_values))
 
+<<<<<<< HEAD
 class RoomHandler(webapp2.RequestHandler):
 	def get(self):
 		user_nickname = getUser(self)
@@ -111,14 +123,16 @@ class RoomHandler(webapp2.RequestHandler):
 class PlayHandler(webapp2.RequestHandler):
 	def get(self):
 
+=======
+numToLetter = ['a', 'b', 'd', 'l', 'r', 'u']
+>>>>>>> bc6006713e20b275c0e68e2e274f4095c5de0526
 
 #temporary code to test controller
 class ControlsTestHandler(webapp2.RequestHandler):
 	def post(self):
-		button_letter = self.request.post('button')
+		button_letter = self.request.get('button')
 		# initialize to 'none'
-		memcache.add(key='letter', value='none', time=3600)
-		update_letter('letter', button_letter)
+		self.test_if_correct(button_letter)
 
 	def get(self):
 		letter = memcache.get('letter')
@@ -129,15 +143,27 @@ class ControlsTestHandler(webapp2.RequestHandler):
 		template_values = {'letter':letter,}
 		self.response.write(template.render(template_values))
 
+	def test_if_correct(self, value):
+	     	sequence = memcache.get('sequence')
+		if value == numToLetter[int(sequence)]:
+			self.response.write(json.dumps({"stat": "true"}))
+		else:
+			self.response.write(json.dumps({"stat": "false"}))
 
-	def update_letter(key, value):
-	   client = memcache.Client()
-	   while True:
-	     counter = client.gets(key)
-	     assert counter is not None, 'Uninitialized counter'
-	     if client.cas(key, value):
-	        break
+class UpdateSequence(webapp2.RequestHandler):
+	def get(self):
+		num = self.request.get('num')
+		memcache.set('sequence', num);
 
+class GenerateRandomButtons(webapp2.RequestHandler):
+	def get(self):
+		data = {'array': []}
+		for x in range(0, 200):
+			data['array'].append(random.randint(0,5))
+		jsonObj = json.dumps(data)
+		memcache.add(key='sequence', value=data['array'][0])
+		self.response.write(jsonObj)
+		
 
 app = webapp2.WSGIApplication([
 	webapp2.Route(r'/', handler=MainPage, name='main'),	
@@ -146,4 +172,6 @@ app = webapp2.WSGIApplication([
 	webapp2.Route(r'/room/connect', handler=ConnectHandler, name='connect'),
 	webapp2.Route(r'/room/play?game', handler=PlayHandler, name='play'),
 	webapp2.Route(r'/game/test/controls', handler=ControlsTestHandler, name='controls_test'),
-], debug=True)
+	webapp2.Route(r'/game/test/sequence', handler=GenerateRandomButtons, name='sequence'),
+	webapp2.Route(r'/game/test/update', handler=UpdateSequence, name='update')
+	], debug=True)

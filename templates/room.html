@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>Mobile Controller Games </title>
+  </head>
+  <body>    
+      <div> Creator: {{ creator }} </div>
+      <div> Status: {{ status }} </div>
+      <div> {{ date }} </div>
+      <div> {{ players }} </div>
+
+      <form action="/room/play?game=1" method="get">
+	    <div><input type="submit" value="Play"></div>
+      </form>
+  </body>
+</html>

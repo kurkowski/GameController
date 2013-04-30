@@ -1,34 +1,40 @@
+#imageDisplayer{
+	position:absolute;
+	top: 0px;
+	left: 40%;
+}
+
 #upArrow{
    position: absolute;
-   left: 150px;
+   left: 200px;
    top: 50px;
 }
 
 #downArrow{
    position: absolute;
-   left: 150px;
+   left: 200px;
    top: 350px;}
 
 #leftArrow{
    position: absolute;
-   left: 0px;
+   left: 50px;
    top: 200px;
 }
 
 #rightArrow{
    position: absolute;
-   left: 300px;
+   left: 350px;
    top: 200px;
 }
 
 #AButton{
    position: absolute;
    top:150px;
-   right: 500px;
+   right: 400px;
 }
 
 #BButton{
    position: absolute;
    top:150px;
-   right:200px;
+   right:100px;
 }
