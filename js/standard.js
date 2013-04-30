@@ -101,4 +101,25 @@ function updateBalloon(){
 	bal.attr('src', 'css/balloon'+balloonSize+'.png');
 }
 
+function onOpened() {
+	console.log("opened");
+};
 
+function onMessage(data) {
+	console.log("received msg");
+	var message = JSON.parse(data).message;
+	var letter = JSON.parse(data).button;
+	if (message == 'monitor')
+	{
+		document.location.href = '/room/play/monitor';
+	}
+	if (message == 'controller' )
+	{
+		document.location.href = '/room/play/controller';
+	}
+	if (button)
+	{
+		$('#letter').append(letter);
+	}
+
+}
