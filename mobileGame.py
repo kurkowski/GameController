@@ -2,6 +2,7 @@ import webapp2
 import jinja2
 import os
 from google.appengine.api import users
+from models import *
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -24,15 +25,17 @@ class MainPage(webapp2.RequestHandler):
 
 class CreateHandler(webapp2.RequestHandler):
 	def get(self):
-		user_nickname = users.getUser()
+		user_nickname = getUser(self)
 		room = Room()
+		room.creator = user_nickname
+		room.put()
 		template = JINJA_ENVIRONMENT.get_template('templates/create.html')
-		template_values = {}
+		template_values = {'creator':room.creator, 'date':room.date}
 		self.response.write(template.render(template_values))
 
 class ConnectHandler(webapp2.RequestHandler):
 	def get(self):
-		user_nickname = users.getUser()
+		user_nickname = getUser(self)
 		code = self.request.get('roomCode')
 		#todo: first need to create room before implementing connect
 
