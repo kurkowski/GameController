@@ -32,8 +32,7 @@ class ControlsTestHandler(webapp2.RequestHandler):
 	def post(self):
 		button_letter = self.request.get('button')
 		# initialize to 'none'
-		memcache.add(key='letter', value='none', time=3600)
-		self.update_letter('letter', button_letter)
+		self.test_if_correct(button_letter)
 
 	def get(self):
 		letter = memcache.get('letter')
@@ -44,25 +43,17 @@ class ControlsTestHandler(webapp2.RequestHandler):
 		template_values = {'letter':letter,}
 		self.response.write(template.render(template_values))
 
-	def update_letter(self, key, value):
-	   client = memcache.Client()
-	   while True:
-	     counter = client.gets(key)
-	     sequence = client.gets("sequence")
-	     logging.info(counter)
-	     logging.info(sequence)
-	     assert counter is not None, 'Uninitialized counter'
-	     if client.cas(key, value):
-		if counter == numToLetter[int(sequence)]:
-			self.response.write(json.dumps({"status": "true"}))
+	def test_if_correct(self, value):
+	     	sequence = memcache.get('sequence')
+		if value == numToLetter[int(sequence)]:
+			self.response.write(json.dumps({"stat": "true"}))
 		else:
-			self.response.write(json.dumps({"status": "false"}))
-	        break
+			self.response.write(json.dumps({"stat": "false"}))
 
 class UpdateSequence(webapp2.RequestHandler):
 	def get(self):
 		num = self.request.get('num')
-		memcache.add(key='sequence', value=num, time=2)
+		memcache.set('sequence', num);
 
 class GenerateRandomButtons(webapp2.RequestHandler):
 	def get(self):
@@ -70,8 +61,9 @@ class GenerateRandomButtons(webapp2.RequestHandler):
 		for x in range(0, 200):
 			data['array'].append(random.randint(0,5))
 		jsonObj = json.dumps(data)
+		memcache.add(key='sequence', value=data['array'][0])
 		self.response.write(jsonObj)
-		memcache.add(key="sequence", value="none", time=2)
+		
 
 app = webapp2.WSGIApplication([
 	webapp2.Route(r'/', handler=MainPage, name='main'),

@@ -1,7 +1,7 @@
 #imageDisplayer{
 	position:absolute;
 	top: 0px;
-	left: 50%;
+	left: 40%;
 }
 
 #upArrow{
