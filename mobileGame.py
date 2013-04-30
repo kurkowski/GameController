@@ -6,15 +6,14 @@ import json
 from google.appengine.api import users
 from google.appengine.api import memcache
 from models import *
-=======
 import random
 import logging
-from google.appengine.api import memcache
 >>>>>>> bc6006713e20b275c0e68e2e274f4095c5de0526
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+numToLetter = ['a', 'b', 'd', 'l', 'r', 'u']
 
 def getUser(self):
 	user = users.get_current_user()
@@ -38,10 +37,9 @@ class MainPage(webapp2.RequestHandler):
 		player = Player.query_player(user_key(user_nickname)).fetch(1)[0]
 		template = JINJA_ENVIRONMENT.get_template('templates/index.html')
 		template_values = {'name':user_nickname, 'inRoom':player}
-=======
-		template = JINJA_ENVIRONMENT.get_template('gameScreen.html')
-		template_values = {}
 >>>>>>> bc6006713e20b275c0e68e2e274f4095c5de0526
+		#template = JINJA_ENVIRONMENT.get_template('gameScreen.html')
+		#template_values = {}
 		self.response.write(template.render(template_values))
 
 class CreateHandler(webapp2.RequestHandler):
@@ -123,8 +121,6 @@ class RoomHandler(webapp2.RequestHandler):
 class PlayHandler(webapp2.RequestHandler):
 	def get(self):
 
-=======
-numToLetter = ['a', 'b', 'd', 'l', 'r', 'u']
 >>>>>>> bc6006713e20b275c0e68e2e274f4095c5de0526
 
 #temporary code to test controller
