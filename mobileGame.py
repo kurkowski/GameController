@@ -134,9 +134,19 @@ class MonitorHandler(webapp2.RequestHandler):
 			room.monitor = user_nickname
 			room.put()
 
+			creator_nickname = room.creator
+			status = room.status
+			date = room.date
+			players = room.players
+
 			token = channel.create_channel(player.room_owner)
 			template = JINJA_ENVIRONMENT.get_template('templates/room.html')
-			template_values = {'token':token, }
+			template_values = {'creator':creator_nickname, 
+								'status':status, 
+								'date': date, 
+								'players': players,
+								'player':player,
+								'token':token, }
 			self.response.write(template.render(template_values))
 
 		else:
@@ -153,16 +163,11 @@ class PlayHandler(webapp2.RequestHandler):
 		room = Room.query_room(user_key(creator)).fetch(1)[0]
 		player_nickname = room.players[0]
 
-
-		token = channel.create_channel(user_nickname + player.room_owner)
-
-		template = JINJA_ENVIRONMENT.get_template('templates/play.html')
-		template_values = {'token':token, }
 		logging.info("here")
-		self.response.write(template.render(template_values))
 
 		channel.send_message(creator, json.dumps({'message':'monitor'}))
-		channel.send_message(player_nickname, json.dumps({'message':'controller'}))
+		channel.send_message(player_nickname+creator, json.dumps({'message':'controller'}))
+		logging.info("here")
 
 
 class PlayMonitor(webapp2.RequestHandler):

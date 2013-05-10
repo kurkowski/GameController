@@ -10,11 +10,9 @@
       <div> {{ date }} </div>
       <div> {{ players }} </div>
 
-      <form action="/room/play" method="get">
 	    <div><input id="play" type="submit" value="Play"></div>
-    </form>
 
-<script src="js/standard.js"></script>
+<script src="/js/standard.js"></script>
     <script>
       channel = new goog.appengine.Channel('{{ token }}');
       socket = channel.open();
@@ -23,22 +21,12 @@
       socket.onerror = onMessage;
       socket.onclose = onMessage;
 
-     /* $('#play').click(function(event)
+      $('#play').click(function(event)
       {
-          $.ajax({
-              type: 'GET',
-              url: '/room/play/',
-              timeout: '10000',
-              success: function(d)
-              {
-              },
-              error: function(request, status, err) {
-                 console.log(request);
-           console.log(status);
-                 console.log(err);      
-              } 
-           });
-      });*/
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/room/play', true);
+        xhr.send();
+      });
   </script>
 
 
