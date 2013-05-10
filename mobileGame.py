@@ -13,7 +13,7 @@ import logging
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
-numToLetter = ['a', 'b', 'd', 'l', 'r', 'u']
+numToLetter = ['a', 'b', 'd', 'l', 'r', 'u', 's']
 
 def getUser(self):
 	user = users.get_current_user()
@@ -32,16 +32,16 @@ def user_key(user_nickname):
 
 class MainPage(webapp2.RequestHandler):
 	def get(self):
-		user_nickname = getUser(self)	
-		player = Player.query_player(user_key(user_nickname)).fetch(1)
-		if player:
-			player = player[0]
-		else:
-			player = None
-		template = JINJA_ENVIRONMENT.get_template('templates/index.html')
-		template_values = {'name':user_nickname, 'inRoom':player}
-		#template = JINJA_ENVIRONMENT.get_template('gameScreen.html')
-		#template_values = {}
+		#user_nickname = getUser(self)	
+		#player = Player.query_player(user_key(user_nickname)).fetch(1)
+		#if player:
+		#	player = player[0]
+		#else:
+		#player = None
+		#template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+		#template_values = {'name':user_nickname, 'inRoom':player}
+		template = JINJA_ENVIRONMENT.get_template('gameScreen.html')
+		template_values = {}
 		self.response.write(template.render(template_values))
 
 class CreateHandler(webapp2.RequestHandler):
@@ -204,11 +204,11 @@ class PlayController(webapp2.RequestHandler):
 #temporary code to test controller
 class ControlsTestHandler(webapp2.RequestHandler):
 	def post(self):
-		user_nickname = getUser(self)	
-		player = Player.query_player(user_key(user_nickname)).fetch(1)[0]
+		#user_nickname = getUser(self)	
+		#player = Player.query_player(user_key(user_nickname)).fetch(1)[0]
 		button_letter = self.request.get('button')
 		# initialize to 'none'
-		#self.test_if_correct(button_letter)
+		self.test_if_correct(button_letter)
 
 
 	def get(self):
@@ -230,16 +230,22 @@ class ControlsTestHandler(webapp2.RequestHandler):
 class UpdateSequence(webapp2.RequestHandler):
 	def get(self):
 		num = self.request.get('num')
-		memcache.set('sequence', num);
+		logging.info(num);
+		logging.info("update")
+		memcache.set('sequence', num)
+		self.response.write(json.dumps({'sequence': num}))
 
 class GenerateRandomButtons(webapp2.RequestHandler):
 	def get(self):
 		data = {'array': []}
 		for x in range(0, 200):
-			data['array'].append(random.randint(0,5))
+			data['array'].append(random.randint(0,6))
 		jsonObj = json.dumps(data)
 		memcache.add(key='sequence', value=data['array'][0])
 		self.response.write(jsonObj)
+		#template = JINJA_ENVIRONMENT.get_template('gameScreen.html')
+		#template_values = {'letter':letter,}
+		#self.response.write(template.render(template_values))
 		
 
 class Controls(webapp2.RequestHandler):
@@ -248,7 +254,7 @@ class Controls(webapp2.RequestHandler):
 		player = Player.query_player(user_key(user_nickname)).fetch(1)[0]
 		button_letter = self.request.get('button')
 		# initialize to 'none'
-		channel.send_message(player.room_owner, json.dumps({'button':button_letter}))
+		#channel.send_message(player.room_owner, json.dumps({'button':button_letter}))
 
 	def get(self):
 		letter = memcache.get('letter')
@@ -261,11 +267,20 @@ class Controls(webapp2.RequestHandler):
 
 	def test_if_correct(self, value):
 	     	sequence = memcache.get('sequence')
-		if value == numToLetter[int(sequence)]:
+		if value == numToLetter[int(sequence)]:	
 			self.response.write(json.dumps({"stat": "true"}))
-		else:
+		else:	
 			self.response.write(json.dumps({"stat": "false"}))
 
+class RunTestSuite(webapp2.RequestHandler):
+	def post(self):
+		template = JINJA_ENVIRONMENT.get_template('qunitTestSuite.html')
+		template_values = {}
+		self.response.write(template.render(template_values))
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('qunitTestSuite.html')
+		template_values = {}
+		self.response.write(template.render(template_values))
 
 app = webapp2.WSGIApplication([
 	webapp2.Route(r'/', handler=MainPage, name='main'),	
@@ -279,5 +294,6 @@ app = webapp2.WSGIApplication([
 	webapp2.Route(r'/room/play/controls', handler=Controls, name='controls'),
 	webapp2.Route(r'/game/test/controls', handler=ControlsTestHandler, name='controls_test'),
 	webapp2.Route(r'/game/test/sequence', handler=GenerateRandomButtons, name='sequence'),
-	webapp2.Route(r'/game/test/update', handler=UpdateSequence, name='update')
+	webapp2.Route(r'/game/test/update', handler=UpdateSequence, name='update'),
+	webapp2.Route(r'/testsuite', handler=RunTestSuite, name='test_suite')
 	], debug=True)
