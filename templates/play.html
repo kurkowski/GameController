@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>Mobile Controller Games </title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+  </head>
+  <body>    
+<script src="../js/standard.js"></script>
+    <script>
+      channel = new goog.appengine.Channel('{{ token }}');
+      socket = channel.open();
+      socket.onopen = onOpened;
+      socket.onmessage = onMessage;
+      socket.onerror = onMessage;
+      socket.onclose = onMessage;
+  </script>
+  </body>
+</html>

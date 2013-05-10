@@ -1,11 +1,19 @@
-<html>
-   <head>
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-         <script type="text/javascript" src="/_ah/channel/jsapi"></script>
-      <link rel="stylesheet" type="text/css" href="css/standard.css">
-   </head>
-   <body>
-      <div id='upArrow'>
+<!DOCTYPE html>
+<head>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/_ah/channel/jsapi"></script>
+	 <link rel="stylesheet" type="text/css" href="css/standard.css">
+</head>
+<body onload="getSequence()">
+	<div id="imageDisplayer">
+		<img src="" width="150" height="150" id='imageBox'>
+	</div>
+
+	<div id="balloonbox">
+		<img src="css/balloon0.png" width="150" height="150" id='imageBalloon'>
+	</div>
+
+	<div id='upArrow'>
          	<input type='image' src='css/uparrow.png' onclick="sendButtonPress('u')">
 	</div>
 
@@ -28,14 +36,16 @@
       	<div id='BButton'>
          	<input type='image' src='css/bbutton.png' onclick="sendButtonPress('b')">
 	</div>
+
+	<div id='letter'> 
+	</div>
 	<script src="js/standard.js"></script>
-   <script>
+	<script>
     channel = new goog.appengine.Channel('{{ token }}');
     socket = channel.open();
     socket.onopen = onOpened;
     socket.onmessage = onMessage;
     socket.onerror = onError;
     socket.onclose = onClose;
-   </script>
-   </body>
-</html>
+    </script>
+</body>
