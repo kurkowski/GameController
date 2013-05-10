@@ -107,13 +107,13 @@ function onOpened() {
 
 function onMessage(data) {
 	console.log("received msg");
-	var message = JSON.parse(data).message;
-	var letter = JSON.parse(data).button;
+	var message = JSON.parse(data.data).message;
+	var letter = JSON.parse(data.data).button;
 	if (message == 'monitor')
 	{
 		document.location.href = '/room/play/monitor';
 	}
-	if (message == 'controller' )
+	if (message == 'controller')
 	{
 		document.location.href = '/room/play/controller';
 	}
