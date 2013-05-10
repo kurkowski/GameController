@@ -171,15 +171,13 @@ function onMessage(data) {
  * code borrowed from https://developer.mozilla.org/en-US/docs/DOM/Mozilla_event_reference/devicemotion
  */
 function handleMotionEvent(event) {
- 
     var x = event.accelerationIncludingGravity.x;
     var y = event.accelerationIncludingGravity.y;
     var z = event.accelerationIncludingGravity.z;
- 
-    if (x > 1.0 && y > 1.0 && z > 1.0){
+    if (y > 8.0){
 	sendButtonPress('s');
     }
 }
  
-window.addEventListener("devicemotion", handleMotionEvent, true);
+window.addEventListener("devicemotion", handleMotionEvent);
 
