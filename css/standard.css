@@ -36,12 +36,12 @@
 
 #AButton{
    position: absolute;
-   top:150px;
-   right: 400px;
+   top:0px;
+   right: 100px;
 }
 
 #BButton{
    position: absolute;
-   top:150px;
+   top:300px;
    right:100px;
 }
